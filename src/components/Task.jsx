@@ -1,9 +1,17 @@
 import './Task.css'
 import { CgClose, CgInfo } from 'react-icons/cg'
+import { useHistory } from 'react-router-dom'
+import axios from 'axios'
 
-const Task = ({ task, handleTaskClick, handleTaskDeletion }) => {
-  const handleButtonClick = () => {
-    handleTaskDeletion(task.id)
+const Task = ({ task, handleTaskDeletion }) => {
+  const history = useHistory()
+
+  const handleTaskDetailsClick = () => {
+    history.push(`/${task.id}`)
+  }
+
+  const handleDeleteTask = async () => {
+    await axios.delete(`http://localhost:3333/tasks/${task.id}`)
   }
 
   return (
@@ -13,14 +21,15 @@ const Task = ({ task, handleTaskClick, handleTaskDeletion }) => {
         borderLeft: task.completed ? '6px solid darkseagreen' : 'none',
       }}
     >
-      <div className="task-title" onClick={() => handleTaskClick(task.id)}>
-        {task.title}
-      </div>
+      <div className="task-title">{task.title}</div>
       <div className="buttons-container">
-        <button className="remove-task-button" onClick={handleButtonClick}>
+        <button className="remove-task-button" onClick={handleDeleteTask}>
           <CgClose />
         </button>
-        <button className="see-task-details-button">
+        <button
+          className="see-task-details-button"
+          onClick={handleTaskDetailsClick}
+        >
           <CgInfo />
         </button>
       </div>
